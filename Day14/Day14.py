@@ -6,10 +6,14 @@ import time
 np.set_printoptions(threshold=np.inf)
 
 def Simulate(seed, e0, e1):
-	seed += str(int(seed[e0]) + int(seed[e1]))
+	a, b = divmod(seed[e0] + seed[e1], 10)
+	if a:
+		seed.append(a)
+	seed.append(b)
+
 	slen = len(seed)
-	e0 = (e0 + (int(seed[e0]) + 1)) %slen
-	e1 = (e1 + (int(seed[e1]) + 1)) %slen
+	e0 = (e0 + seed[e0] + 1) %slen
+	e1 = (e1 + seed[e1] + 1) %slen
 	return seed, e0, e1
 	
 
@@ -22,24 +26,24 @@ def BetterPrint(grid):
 
 
 def main():
-	seed = '37'
-	cpos = 320851
+	seed = [3,7]
+	cpos = [3,2,0,8,5,1]
 	e0 = 0
 	e1 = 1
 
 	i = 0
-	clen = len(str(cpos))
+	clen = len(cpos)
 	while True:
 		seed, e0, e1 = Simulate(seed, e0, e1)
 		if len(seed) > 7:
 			#print(seed[-6:], seed[-7:-1])
-			if seed[-clen:] == str(cpos):
+			if seed[-clen:] == cpos:
 				print('found it')
-				print(len(seed) - len(str(cpos)))
+				print(len(seed) - clen)
 				break
-			elif seed[-clen - 1:-1] == str(cpos):
+			elif seed[-clen - 1:-1] == cpos:
 				print('found it at n-1')
-				print(len(seed) - len(str(cpos)) - 1)
+				print(len(seed) - clen - 1)
 				break
 		i += 1
 		print(i)
